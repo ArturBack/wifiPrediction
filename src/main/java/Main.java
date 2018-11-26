@@ -1,6 +1,10 @@
+import data.DataProcessor;
+
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello World");
+
+        DataProcessor processor = new DataProcessor();
+        processor.processTrainData();
     }
 }
