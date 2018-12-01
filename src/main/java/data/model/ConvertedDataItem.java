@@ -1,16 +1,35 @@
 package data.model;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 public class ConvertedDataItem {
 
+    @CsvBindByPosition(position = 0)
     private Integer day;
-    private String time;
-    private String clientsNumber;
-    private String channelUtilization;
 
-    public ConvertedDataItem(Integer day, String time, String clientsNumber, String channelUtilization) {
+    @CsvBindByPosition(position = 1)
+    private Integer hour;
+
+    @CsvBindByPosition(position = 2)
+    private Integer minute;
+
+    @CsvBindByPosition(position = 3)
+    private Integer isSchool;
+
+    @CsvBindByPosition(position = 4)
+    private Integer channelUtilization;
+
+    @CsvBindByPosition(position = 5)
+    private Integer clientsNumber;
+
+
+    public ConvertedDataItem(Integer day, Integer hour, Integer minute, Integer isSchool, Integer channelUtilization, Integer clientsNumber) {
         this.day = day;
-        this.time = time;this.clientsNumber = clientsNumber;
+        this.hour = hour;
+        this.minute = minute;
+        this.isSchool = isSchool;
         this.channelUtilization = channelUtilization;
+        this.clientsNumber = clientsNumber;
     }
 
     public Integer getDay() {
@@ -21,27 +40,43 @@ public class ConvertedDataItem {
         this.day = day;
     }
 
-    public String getTime() {
-        return time;
+    public Integer getHour() {
+        return hour;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setHour(Integer hour) {
+        this.hour = hour;
     }
 
-    public String getClientsNumber() {
-        return clientsNumber;
+    public Integer getMinute() {
+        return minute;
     }
 
-    public void setClientsNumber(String clientsNumber) {
-        this.clientsNumber = clientsNumber;
+    public void setMinute(Integer minute) {
+        this.minute = minute;
     }
 
-    public String getChannelUtilization() {
+    public Integer getIsSchool() {
+        return isSchool;
+    }
+
+    public void setIsSchool(Integer isSchool) {
+        this.isSchool = isSchool;
+    }
+
+    public Integer getChannelUtilization() {
         return channelUtilization;
     }
 
-    public void setChannelUtilization(String channelUtilization) {
+    public void setChannelUtilization(Integer channelUtilization) {
         this.channelUtilization = channelUtilization;
+    }
+
+    public Integer getClientsNumber() {
+        return clientsNumber;
+    }
+
+    public void setClientsNumber(Integer clientsNumber) {
+        this.clientsNumber = clientsNumber;
     }
 }

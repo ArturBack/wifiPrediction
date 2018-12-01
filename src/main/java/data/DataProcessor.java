@@ -1,7 +1,8 @@
 package data;
 
-import data.model.ConvertedDataItem;
-import data.model.DataItem;
+import data.metadata.MetaData2015;
+import data.metadata.MetaDataInfo;
+import data.model.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -21,13 +22,13 @@ public class DataProcessor {
 
     private Logger logger = Logger.getLogger(getClass().getSimpleName());
 
-    private String DATA_DIR = "2015-03";
-    private String DATA_DIR_PROCESSED = DATA_DIR.concat("_PROCESSED/");
+    private String DATA_DIR_PROCESSED = "_PROCESSED/";
     private String AP_NAME = "AP-D2-acf2.c571.70c0";
     private String DATE_PATTERN = "yyyy-MM-dd";
+    private MetaDataInfo metaDataInfo = new MetaData2015();
 
     public void processTrainData() {
-        try (Stream<Path> paths = Files.walk(Paths.get(DATA_DIR))) {
+        try (Stream<Path> paths = Files.walk(Paths.get(metaDataInfo.getDataDirectorName()))) {
             paths
                     .filter(path -> Files.isRegularFile(path))
                     .forEach(this::processData);
@@ -50,7 +51,11 @@ public class DataProcessor {
     }
 
     private Path getDestinationPath(Path path) {
-        return Paths.get(DATA_DIR_PROCESSED.concat(path.getFileName().toString()));
+        return Paths.get(getProcessedDataDirectoryName().concat(path.getFileName().toString()));
+    }
+
+    private String getProcessedDataDirectoryName() {
+        return metaDataInfo.getDataDirectorName().concat(DATA_DIR_PROCESSED);
     }
 
     private List<ConvertedDataItem> convertData(List<DataItem> items) {
@@ -68,8 +73,34 @@ public class DataProcessor {
 
         String date = splittedDate[0];
         String time = splittedDate[1];
+        int weekDay = getDayFromDate(date);
+        int hour = getHourFromTime(time);
+        int minute = getMinuteFromTime(time);
+        int isSchool = isSchool(date);
 
-        return new ConvertedDataItem(getDayFromDate(date), time, dataItem.getClientsNumber(), dataItem.getChannelUtilization());
+        return new ConvertedDataItem(weekDay, hour, minute, isSchool, dataItem.getChannelUtilization(), dataItem.getClientsNumber());
+    }
+
+    private int getHourFromTime(String time) {
+        Pattern pattern = Pattern.compile("-");
+        String[] splittedTime = pattern.split(time);
+
+        String hour = splittedTime[0];
+        return hour.startsWith("0") ? Integer.valueOf(hour.substring(1, 2)) : Integer.valueOf(hour);
+    }
+
+    private int getMinuteFromTime(String time) {
+        Pattern pattern = Pattern.compile("-");
+        String[] splittedTime = pattern.split(time);
+
+        String minute = splittedTime[1];
+        return minute.startsWith("0") ? Integer.valueOf(minute.substring(1, 2)) : Integer.valueOf(minute);
+    }
+
+    private int isSchool(String date) {
+        return metaDataInfo.getNoSchoolDates()
+                .stream()
+                .anyMatch(noSchoolDate -> noSchoolDate.equals(date)) ? 0 : 1;
     }
 
     private int getDayFromDate(String stringDate) {

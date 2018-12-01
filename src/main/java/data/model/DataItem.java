@@ -11,10 +11,10 @@ public class DataItem {
     private String apName;
 
     @CsvBindByPosition(position = 2)
-    private String clientsNumber;
+    private int clientsNumber;
 
     @CsvBindByPosition(position = 19)
-    private String channelUtilization;
+    private int channelUtilization;
 
     public String getDate() {
         return date;
@@ -32,19 +32,19 @@ public class DataItem {
         this.apName = apName;
     }
 
-    public String getClientsNumber() {
+    public int getClientsNumber() {
         return clientsNumber;
     }
 
-    public void setClientsNumber(String clientsNumber) {
+    public void setClientsNumber(int clientsNumber) {
         this.clientsNumber = clientsNumber;
     }
 
-    public String getChannelUtilization() {
+    public int getChannelUtilization() {
         return channelUtilization;
     }
 
-    public void setChannelUtilization(String channelUtilization) {
+    public void setChannelUtilization(int channelUtilization) {
         this.channelUtilization = channelUtilization;
     }
 }
