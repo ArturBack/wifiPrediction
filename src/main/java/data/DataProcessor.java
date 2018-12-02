@@ -1,7 +1,6 @@
 package data;
 
-import data.metadata.MetaData2015;
-import data.metadata.MetaDataInfo;
+import data.metadata.*;
 import data.model.*;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -18,14 +18,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static data.DataIO.loadProcessedData;
+
 public class DataProcessor {
 
     private Logger logger = Logger.getLogger(getClass().getSimpleName());
 
-    private String DATA_DIR_PROCESSED = "_PROCESSED/";
+    public static String DATA_DIR_PROCESSED = "_PROCESSED/";
+    public static String TRAIN_DATA_FILENAME = "testdata/trainData.csv";
     private String AP_NAME = "AP-D2-acf2.c571.70c0";
     private String DATE_PATTERN = "yyyy-MM-dd";
-    private MetaDataInfo metaDataInfo = new MetaData2015();
+    private MetaDataInfo metaDataInfo = new MetaData2015Week1();
 
     public void processTrainData() {
         try (Stream<Path> paths = Files.walk(Paths.get(metaDataInfo.getDataDirectorName()))) {
@@ -36,6 +39,7 @@ public class DataProcessor {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        joinAllTrainDataToOneFile();
     }
 
     private void processData(Path path) {
@@ -115,5 +119,22 @@ public class DataProcessor {
             logger.info(e.getMessage());
         }
         return -1;
+    }
+
+    private void joinAllTrainDataToOneFile() {
+        DataIO.saveData(Paths.get(getProcessedDataDirectoryName().concat(TRAIN_DATA_FILENAME)), loadAllTrainData());
+    }
+
+    private List<ConvertedDataItem> loadAllTrainData(){
+        List<ConvertedDataItem> convertedDataItems = new ArrayList<>();
+        try (Stream<Path> paths = Files.walk(Paths.get(getProcessedDataDirectoryName()))) {
+            paths
+                    .filter(path -> Files.isRegularFile(path))
+                    .forEach(path -> convertedDataItems.addAll(loadProcessedData(path)));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return convertedDataItems;
     }
 }

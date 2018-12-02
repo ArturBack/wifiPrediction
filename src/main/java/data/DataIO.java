@@ -1,7 +1,10 @@
 package data;
 
 import com.opencsv.CSVWriter;
-import com.opencsv.bean.*;
+import com.opencsv.bean.CsvToBean;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
 import data.model.ConvertedDataItem;
@@ -16,7 +19,7 @@ import java.util.List;
 
 public class DataIO {
 
-    private static Character SEPARATOR = ';';
+    public static Character SEPARATOR = ';';
 
     public static List<DataItem> loadData(Path path) {
         List<DataItem> result = null;
@@ -34,10 +37,29 @@ public class DataIO {
         return result;
     }
 
-    public static void saveData(Path path, List<ConvertedDataItem> items) {
+    public static List<ConvertedDataItem> loadProcessedData(Path path) {
+        List<ConvertedDataItem> result = null;
+        try (Reader reader = Files.newBufferedReader(path)) {
+            CsvToBean<ConvertedDataItem> csvToBean =
+                    new CsvToBeanBuilder(reader)
+                            .withType(ConvertedDataItem.class)
+                            .withSeparator(SEPARATOR)
+                            .build();
+
+            result = csvToBean.parse();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static <T> void saveData(Path path, List<T> items) {
         path.getParent().toFile().mkdirs();
+        if (path.toFile().exists()) {
+            path.toFile().delete();
+        }
         try (Writer writer = Files.newBufferedWriter(path)) {
-            StatefulBeanToCsv<ConvertedDataItem> beanToCsv = new StatefulBeanToCsvBuilder(writer)
+            StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder(writer)
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                     .withSeparator(SEPARATOR)
                     .build();
@@ -46,7 +68,6 @@ public class DataIO {
         } catch (IOException | CsvRequiredFieldEmptyException | CsvDataTypeMismatchException e) {
             e.printStackTrace();
         }
-
 
     }
 

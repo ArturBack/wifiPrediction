@@ -2,7 +2,7 @@ package data.model;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-public class ConvertedDataItem {
+public class PredictedDataItem {
 
     @CsvBindByPosition(position = 0)
     private Integer day;
@@ -22,16 +22,20 @@ public class ConvertedDataItem {
     @CsvBindByPosition(position = 5)
     private Integer clientsNumber;
 
-    public ConvertedDataItem() {
-    }
+    @CsvBindByPosition(position = 6)
+    private Integer prediction;
 
-    public ConvertedDataItem(Integer day, Integer hour, Integer minute, Integer isSchool, Integer channelUtilization, Integer clientsNumber) {
+    public PredictedDataItem(Integer day, Integer hour, Integer minute, Integer isSchool, Integer channelUtilization, Integer clientsNumber, Integer prediction) {
         this.day = day;
         this.hour = hour;
         this.minute = minute;
         this.isSchool = isSchool;
         this.channelUtilization = channelUtilization;
         this.clientsNumber = clientsNumber;
+        this.prediction = prediction;
+    }
+
+    public PredictedDataItem() {
     }
 
     public Integer getDay() {
@@ -80,5 +84,13 @@ public class ConvertedDataItem {
 
     public void setClientsNumber(Integer clientsNumber) {
         this.clientsNumber = clientsNumber;
+    }
+
+    public Integer getPrediction() {
+        return prediction;
+    }
+
+    public void setPrediction(Integer prediction) {
+        this.prediction = prediction;
     }
 }
