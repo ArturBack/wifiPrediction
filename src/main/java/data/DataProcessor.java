@@ -25,13 +25,14 @@ public class DataProcessor {
     private Logger logger = Logger.getLogger(getClass().getSimpleName());
 
     public static final String TRAIN_DATA_FILEPATH = "testdata/trainData.csv";
-    private String AP_NAME = "AP-D2-acf2.c571.70c0";
     private String DATE_PATTERN = "yyyy-MM-dd";
 
     private MetaDataInfo dataInfo;
+    private String apName;
 
-    public DataProcessor(MetaDataInfo dataInfo) {
+    public DataProcessor(MetaDataInfo dataInfo, String apName) {
         this.dataInfo = dataInfo;
+        this.apName = apName;
     }
 
     public void processData() {
@@ -69,7 +70,7 @@ public class DataProcessor {
     private List<ConvertedDataItem> convertData(List<DataItem> items) {
         Stream<ConvertedDataItem> stream = items
                 .stream()
-                .filter(dataItem -> AP_NAME.equals(dataItem.getApName()))
+                .filter(dataItem -> apName.equals(dataItem.getApName()))
                 .map(this::toConvertedDataItem);
         return stream.collect(Collectors.toList());
     }

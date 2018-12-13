@@ -25,8 +25,6 @@ public class MLPClassifier {
             model.buildClassifier(trainData);
             ModelIO.saveModel(model);
 
-            //Evaluation evaluation = new Evaluation(trainData);
-            // evaluation.evaluateModel(model, trainData);
         } catch (Exception e) {
             e.printStackTrace();
         }
