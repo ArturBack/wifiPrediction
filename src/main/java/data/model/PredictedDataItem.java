@@ -2,27 +2,31 @@ package data.model;
 
 import com.opencsv.bean.CsvBindByPosition;
 
+import static data.model.ConvertedDataItem.*;
+
 public class PredictedDataItem {
 
-    @CsvBindByPosition(position = 0)
+    public static final int PREDICTION_POSITION = 6;
+
+    @CsvBindByPosition(position = DAY_POSITION)
     private Integer day;
 
-    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = HOUR_POSITION)
     private Integer hour;
 
-    @CsvBindByPosition(position = 2)
+    @CsvBindByPosition(position = MINUTE_POSITION)
     private Integer minute;
 
-    @CsvBindByPosition(position = 3)
+    @CsvBindByPosition(position = IS_SCHOOL_POSITION)
     private Integer isSchool;
 
-    @CsvBindByPosition(position = 4)
+    @CsvBindByPosition(position = CHANNEL_UTILIZATION_POSITION)
     private Integer channelUtilization;
 
-    @CsvBindByPosition(position = 5)
+    @CsvBindByPosition(position = CLIENTS_NUMBER_POSITION)
     private Integer clientsNumber;
 
-    @CsvBindByPosition(position = 6)
+    @CsvBindByPosition(position = PREDICTION_POSITION)
     private Integer prediction;
 
     public PredictedDataItem(Integer day, Integer hour, Integer minute, Integer isSchool, Integer channelUtilization, Integer clientsNumber, Integer prediction) {

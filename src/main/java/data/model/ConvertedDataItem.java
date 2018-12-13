@@ -4,22 +4,29 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class ConvertedDataItem {
 
-    @CsvBindByPosition(position = 0)
+    public static final int DAY_POSITION = 0;
+    public static final int HOUR_POSITION = 1;
+    public static final int MINUTE_POSITION = 2;
+    public static final int IS_SCHOOL_POSITION = 3;
+    public static final int CHANNEL_UTILIZATION_POSITION = 4;
+    public static final int CLIENTS_NUMBER_POSITION = 5;
+
+    @CsvBindByPosition(position = DAY_POSITION)
     private Integer day;
 
-    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = HOUR_POSITION)
     private Integer hour;
 
-    @CsvBindByPosition(position = 2)
+    @CsvBindByPosition(position = MINUTE_POSITION)
     private Integer minute;
 
-    @CsvBindByPosition(position = 3)
+    @CsvBindByPosition(position = IS_SCHOOL_POSITION)
     private Integer isSchool;
 
-    @CsvBindByPosition(position = 4)
+    @CsvBindByPosition(position = CHANNEL_UTILIZATION_POSITION)
     private Integer channelUtilization;
 
-    @CsvBindByPosition(position = 5)
+    @CsvBindByPosition(position = CLIENTS_NUMBER_POSITION)
     private Integer clientsNumber;
 
     public ConvertedDataItem() {

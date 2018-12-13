@@ -1,17 +1,24 @@
 import classification.MLPClassifier;
+import classification.TestDataEvaluator;
 import data.DataProcessor;
+import data.metadata.MetaData2015Week1;
+import data.metadata.MetaDataInfo;
 
 public class Main {
 
+
     public static void main(String[] args) {
 
-    /* DataProcessor processor = new DataProcessor();
-      processor.processTrainData();*/
+        MetaDataInfo trainDataInfo = new MetaData2015Week1();
+        MetaDataInfo testDataInfo = new MetaData2015Week1();
 
-        MLPClassifier mlpClassifier = new MLPClassifier();
+        DataProcessor processor = new DataProcessor(trainDataInfo);
+        //processor.processData();
+
+
         try {
-            mlpClassifier.trainModel();
-            mlpClassifier.evaluateTestData();
+            MLPClassifier.trainModel(trainDataInfo);
+            TestDataEvaluator.evaluateTestData(testDataInfo);
         } catch (Exception e) {
             e.printStackTrace();
         }

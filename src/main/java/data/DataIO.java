@@ -21,31 +21,14 @@ public class DataIO {
 
     public static Character SEPARATOR = ';';
 
-    public static List<DataItem> loadData(Path path) {
-        List<DataItem> result = null;
+    public static <T> List<T> loadData(Path path, Class type) {
+        List<T> result = null;
         try (Reader reader = Files.newBufferedReader(path)) {
-            CsvToBean<DataItem> csvToBean =
+            CsvToBean<T> csvToBean =
                     new CsvToBeanBuilder(reader)
-                            .withType(DataItem.class)
+                            .withType(type)
                             .withSeparator(SEPARATOR)
                             .build();
-
-            result = csvToBean.parse();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public static List<ConvertedDataItem> loadProcessedData(Path path) {
-        List<ConvertedDataItem> result = null;
-        try (Reader reader = Files.newBufferedReader(path)) {
-            CsvToBean<ConvertedDataItem> csvToBean =
-                    new CsvToBeanBuilder(reader)
-                            .withType(ConvertedDataItem.class)
-                            .withSeparator(SEPARATOR)
-                            .build();
-
             result = csvToBean.parse();
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,21 +37,23 @@ public class DataIO {
     }
 
     public static <T> void saveData(Path path, List<T> items) {
-        path.getParent().toFile().mkdirs();
-        if (path.toFile().exists()) {
-            path.toFile().delete();
-        }
+        recreatePath(path);
         try (Writer writer = Files.newBufferedWriter(path)) {
             StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder(writer)
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                     .withSeparator(SEPARATOR)
                     .build();
-
             beanToCsv.write(items);
         } catch (IOException | CsvRequiredFieldEmptyException | CsvDataTypeMismatchException e) {
             e.printStackTrace();
         }
+    }
 
+    private static void recreatePath(Path path) {
+        path.getParent().toFile().mkdirs();
+        if (path.toFile().exists()) {
+            path.toFile().delete();
+        }
     }
 
 }

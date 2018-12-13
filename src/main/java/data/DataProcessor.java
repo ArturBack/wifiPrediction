@@ -1,7 +1,8 @@
 package data;
 
-import data.metadata.*;
-import data.model.*;
+import data.metadata.MetaDataInfo;
+import data.model.ConvertedDataItem;
+import data.model.DataItem;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,20 +19,23 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static data.DataIO.loadProcessedData;
 
 public class DataProcessor {
 
     private Logger logger = Logger.getLogger(getClass().getSimpleName());
 
-    public static String DATA_DIR_PROCESSED = "_PROCESSED/";
-    public static String TRAIN_DATA_FILENAME = "testdata/trainData.csv";
+    public static final String TRAIN_DATA_FILEPATH = "testdata/trainData.csv";
     private String AP_NAME = "AP-D2-acf2.c571.70c0";
     private String DATE_PATTERN = "yyyy-MM-dd";
-    private MetaDataInfo metaDataInfo = new MetaData2015Week1();
 
-    public void processTrainData() {
-        try (Stream<Path> paths = Files.walk(Paths.get(metaDataInfo.getDataDirectorName()))) {
+    private MetaDataInfo dataInfo;
+
+    public DataProcessor(MetaDataInfo dataInfo) {
+        this.dataInfo = dataInfo;
+    }
+
+    public void processData() {
+        try (Stream<Path> paths = Files.walk(Paths.get(dataInfo.getDataDirectorName()))) {
             paths
                     .filter(path -> Files.isRegularFile(path))
                     .forEach(this::processData);
@@ -39,11 +43,11 @@ public class DataProcessor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        joinAllTrainDataToOneFile();
+        joinAllTrainData();
     }
 
     private void processData(Path path) {
-        List<DataItem> items = DataIO.loadData(path);
+        List<DataItem> items = DataIO.loadData(path, DataItem.class);
         logger.info("Loaded: " + path.getFileName().toString());
 
         List<ConvertedDataItem> convertedDataItems = convertData(items);
@@ -59,7 +63,7 @@ public class DataProcessor {
     }
 
     private String getProcessedDataDirectoryName() {
-        return metaDataInfo.getDataDirectorName().concat(DATA_DIR_PROCESSED);
+        return ProcessedDataPathProvider.getProcessedDataDirectoryPath(dataInfo);
     }
 
     private List<ConvertedDataItem> convertData(List<DataItem> items) {
@@ -68,7 +72,6 @@ public class DataProcessor {
                 .filter(dataItem -> AP_NAME.equals(dataItem.getApName()))
                 .map(this::toConvertedDataItem);
         return stream.collect(Collectors.toList());
-
     }
 
     private ConvertedDataItem toConvertedDataItem(DataItem dataItem) {
@@ -102,7 +105,7 @@ public class DataProcessor {
     }
 
     private int isSchool(String date) {
-        return metaDataInfo.getNoSchoolDates()
+        return dataInfo.getNoSchoolDates()
                 .stream()
                 .anyMatch(noSchoolDate -> noSchoolDate.equals(date)) ? 0 : 1;
     }
@@ -121,8 +124,8 @@ public class DataProcessor {
         return -1;
     }
 
-    private void joinAllTrainDataToOneFile() {
-        DataIO.saveData(Paths.get(getProcessedDataDirectoryName().concat(TRAIN_DATA_FILENAME)), loadAllTrainData());
+    private void joinAllTrainData() {
+        DataIO.saveData(Paths.get(getProcessedDataDirectoryName().concat(TRAIN_DATA_FILEPATH)), loadAllTrainData());
     }
 
     private List<ConvertedDataItem> loadAllTrainData(){
@@ -130,7 +133,7 @@ public class DataProcessor {
         try (Stream<Path> paths = Files.walk(Paths.get(getProcessedDataDirectoryName()))) {
             paths
                     .filter(path -> Files.isRegularFile(path))
-                    .forEach(path -> convertedDataItems.addAll(loadProcessedData(path)));
+                    .forEach(path -> convertedDataItems.addAll(DataIO.loadData(path, ConvertedDataItem.class)));
 
         } catch (IOException e) {
             e.printStackTrace();

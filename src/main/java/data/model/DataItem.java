@@ -4,16 +4,21 @@ import com.opencsv.bean.CsvBindByPosition;
 
 public class DataItem {
 
-    @CsvBindByPosition(position = 0)
+    public static final int DATE_POSITION = 0;
+    public static final int AP_NAME_POSITION = 1;
+    public static final int CLIENTS_NUMBER_POSITION = 2;
+    public static final int CHANNEL_UTILIZATION_POSITION = 19;
+
+    @CsvBindByPosition(position = DATE_POSITION)
     private String date;
 
-    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = AP_NAME_POSITION)
     private String apName;
 
-    @CsvBindByPosition(position = 2)
+    @CsvBindByPosition(position = CLIENTS_NUMBER_POSITION)
     private int clientsNumber;
 
-    @CsvBindByPosition(position = 19)
+    @CsvBindByPosition(position = CHANNEL_UTILIZATION_POSITION)
     private int channelUtilization;
 
     public String getDate() {
