@@ -1,6 +1,5 @@
 package classification;
 
-import classification.model.ModelIO;
 import data.DataIO;
 import data.ProcessedDataPathProvider;
 import data.metadata.MetaDataInfo;
@@ -58,7 +57,7 @@ public class TestDataEvaluator {
     }
 
     private static Instances loadTestData(Path path) {
-        Instances testData = DataProvider.loadData(path.toFile().getAbsolutePath());
+        Instances testData = ClassifierDataProvider.loadData(path.toFile().getAbsolutePath());
         testData.setClassIndex(testData.numAttributes() - 1);
         return testData;
     }

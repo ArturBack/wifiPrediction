@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import static data.DataIO.SEPARATOR;
 
-public class DataProvider {
+public class ClassifierDataProvider {
 
     public static Instances loadData(String path) {
         CSVLoader csvLoader = new CSVLoader();

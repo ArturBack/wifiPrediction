@@ -1,6 +1,5 @@
 package classification;
 
-import classification.model.ModelIO;
 import data.ProcessedDataPathProvider;
 import data.metadata.MetaDataInfo;
 import weka.classifiers.functions.MultilayerPerceptron;
@@ -18,7 +17,7 @@ public class MLPClassifier {
 
     public static void trainModel(MetaDataInfo trainDataInfo) {
         try {
-            Instances trainData = DataProvider.loadData(getTrainDataDirectoryPath(trainDataInfo));
+            Instances trainData = ClassifierDataProvider.loadData(getTrainDataDirectoryPath(trainDataInfo));
             trainData.setClassIndex(trainData.numAttributes() - 1);
 
             MultilayerPerceptron model = buildNeuralNetwork();

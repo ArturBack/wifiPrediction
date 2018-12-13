@@ -1,4 +1,4 @@
-package classification.model;
+package classification;
 
 import weka.classifiers.functions.MultilayerPerceptron;
 import weka.core.SerializationHelper;
