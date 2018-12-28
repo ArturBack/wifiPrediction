@@ -17,7 +17,8 @@ public class MLPClassifier {
 
     public static void trainModel(MetaDataInfo trainDataInfo) {
         try {
-            Instances trainData = ClassifierDataProvider.loadData(getTrainDataDirectoryPath(trainDataInfo));
+            Instances trainData = ClassifierDataProvider
+                    .loadData(getTrainDataDirectoryPath(trainDataInfo));
             trainData.setClassIndex(trainData.numAttributes() - 1);
 
             MultilayerPerceptron model = buildNeuralNetwork();
@@ -40,6 +41,8 @@ public class MLPClassifier {
     }
 
     private static String getTrainDataDirectoryPath(MetaDataInfo trainMetaDataInfo) {
-        return ProcessedDataPathProvider.getProcessedDataDirectoryPath(trainMetaDataInfo).concat(TRAIN_DATA_FILEPATH);
+        return ProcessedDataPathProvider.
+                getProcessedDataDirectoryPath(trainMetaDataInfo)
+                .concat(TRAIN_DATA_FILEPATH);
     }
 }

@@ -39,7 +39,7 @@ public class DataProcessor {
         try (Stream<Path> paths = Files.walk(Paths.get(dataInfo.getDataDirectorName()))) {
             paths
                     .filter(path -> Files.isRegularFile(path))
-                    .forEach(this::processData);
+                    .forEach(this::convertData);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +47,7 @@ public class DataProcessor {
         joinAllTrainData();
     }
 
-    private void processData(Path path) {
+    private void convertData(Path path) {
         List<DataItem> items = DataIO.loadData(path, DataItem.class);
         logger.info("Loaded: " + path.getFileName().toString());
 

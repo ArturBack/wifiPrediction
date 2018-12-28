@@ -29,16 +29,12 @@ public class TestDataEvaluator {
         }
         try (Stream<Path> paths = Files.walk(getTestDataDirectoryPath(testDataInfo))) {
             paths
-                    .filter(path -> Files.isRegularFile(path) && !path.endsWith(TRAIN_DATA_FILEPATH))
+                    .filter(TestDataEvaluator::isTestDataFile)
                     .forEach(path -> evaluateData(model, path));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private static Path getTestDataDirectoryPath(MetaDataInfo testData) {
-        return Paths.get(ProcessedDataPathProvider.getProcessedDataDirectoryPath(testData));
     }
 
     private static void evaluateData(MultilayerPerceptron model, Path path) {
@@ -54,6 +50,14 @@ public class TestDataEvaluator {
             }
         }
         DataIO.saveData(createPredictionsFilePath(path), predictions);
+    }
+
+    private static boolean isTestDataFile(Path path) {
+        return Files.isRegularFile(path) && !path.endsWith(TRAIN_DATA_FILEPATH);
+    }
+
+    private static Path getTestDataDirectoryPath(MetaDataInfo testData) {
+        return Paths.get(ProcessedDataPathProvider.getProcessedDataDirectoryPath(testData));
     }
 
     private static Instances loadTestData(Path path) {
